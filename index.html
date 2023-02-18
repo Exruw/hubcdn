@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="icon.svg" />
+		<meta name="description" content="A list of all images." />
+		<meta name="theme-color" content="#262626" />
+		<title>Image Directory</title>
+
+		<style>
+			@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap');
+
+			body {
+				margin: 0;
+				background-color: #1e1e1e;
+			}
+
+			.topbar {
+				display: inline-block;
+				width: 100%;
+				margin: 0;
+				background-color: #262626;
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+				margin-bottom: 20px;
+			}
+
+			.topbar p {
+				text-align: center;
+				font-family: Inconsolata;
+				font-weight: 400;
+				font-size: 20px;
+				user-select: none;
+				color: white;
+			}
+
+			.topbar a {
+				font-size: 15px;
+				text-decoration: none;
+				color: white;
+			}
+
+			.topbar a:hover {
+				text-decoration: underline;
+			}
+
+			.content-container {
+				display: block;
+				margin: auto;
+				width: 50%;
+				word-wrap: break-word;
+				background-color: #262626;
+				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+				overflow-x: hidden;
+				overflow-y: auto;
+				margin-bottom: 20px;
+			}
+
+			.content-container input[type='text'] {
+				width: 100%;
+				outline: none;
+				background-color: #262626;
+				border: none;
+				font-family: Inconsolata;
+				font-weight: 300;
+				font-size: 15px;
+				color: white;
+				padding: 5px 10px;
+			}
+
+			.content-container a {
+				display: block;
+				background-color: transparent;
+				padding: 5px 10px;
+				margin: 0;
+				font-family: Inconsolata;
+				font-weight: 300;
+				font-size: 15px;
+				user-select: none;
+				text-decoration: none;
+				text-align: center;
+				color: white;
+			}
+
+			.content-container a:hover {
+				text-decoration: underline;
+				background-color: #212121;
+			}
+
+			.content-container a:active {
+				background-color: #1a1a1a;
+			}
+
+			footer p {
+				text-align: center;
+				font-family: Inconsolata;
+				font-weight: 300;
+				font-size: 15px;
+				color: #c9c9c9;
+				user-select: none;
+			}
+
+			@media screen and (max-width: 768px) {
+				.content-container {
+					width: 85%;
+				}
+
+				.content-container a {
+					font-size: 12px;
+				}
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="topbar">
+			<p>404 Image List<br /><a href="https://hubchicken.tk/">Go Back</a></p>
+            
+		</div>
+		<div class="content-container">
+			<input
+				type="text"
+				placeholder="Search an image.."
+				id="search-text"
+			/>
+		</div>
+        
+		<div
+			class="content-container"
+			style="height: calc(88vh - 50px)"
+			id="container"
+		></div>
+		<script type="module">
+			const imagelist = [];
+			const extensions = {"gif": true, "png": true, "jpg": true, "jpeg": true};
+			(await (await fetch(`https://api.github.com/repos/Exruw/hubcdn/git/trees/${(await (await fetch("https://api.github.com/repos/Exruw/hubcdn/commits")).json())[0]?.commit?.tree?.sha}`)).json()).tree.forEach(v => {
+ 			   if (v?.type !== "tree" && v?.path && extensions[v.path.split(".").pop()])
+ 			       imagelist.push(`https://cdn.hubchicken.tk/${encodeURIComponent(v.path)}`);
+			});
+			export function getArray()
+			{
+			    return imagelist
+			}
+			var images = getArray(), imageElements = [];
+
+			var container = document.getElementById('container');
+			var searchText = document.getElementById('search-text');
+			searchText.placeholder = `Search for an image out of ${images.length} images...`;
+
+			function insertLink(text, link) {
+				link = link.replace('https://cdn.hubchicken.tk/', '')
+				var newElement = document.createElement('a')
+				newElement.href = `${link}`
+				newElement.innerText = text
+				container.append(newElement)
+				imageElements.push(newElement)
+			}
+
+			function formatText(text) {
+				let formatted = text.split('https://cdn.hubchicken.tk/')
+				if (formatted[1])
+					// fuk u if you have a file extension twice
+					return formatted[1]
+						.replace('.png', '')
+						.replace('.jpg', '')
+						.replace('.gif', '')
+						.replaceAll('_', ' ')
+						.replaceAll('-', ' ')
+				//
+				else return text
+			}
+
+			images.sort()
+			images.forEach((image) => {
+				insertLink(formatText(image), image)
+			})
+
+			// Searching
+
+			function searchItems(search) {
+				imageElements.forEach((image) => {
+					if (
+						//Kept this if anyone wants to revert it, for whatever reason
+						//---------------------------------------------------------------
+						//formatText(video.innerText)
+						//	.substring(0, search.length)
+						//	.toLowerCase() == search.toLowerCase()
+						image.innerText.includes(search)
+					) {
+						image.style.display = 'block'
+					} else {
+						image.style.display = 'none'
+					}
+				})
+			}
+
+			searchText.onkeyup = function () {
+				searchItems(searchText.value)
+			}
+		</script>
+	</body>
+</html>
