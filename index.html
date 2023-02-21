@@ -1,203 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="icon" type="image/svg+xml" href="icon.svg" />
-		<meta name="description" content="A list of all images." />
-		<meta name="theme-color" content="#262626" />
-		<title>Image Directory</title>
-
-		<style>
-			@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap');
-
-			body {
-				margin: 0;
-				background-color: #1e1e1e;
-			}
-
-			.topbar {
-				display: inline-block;
-				width: 100%;
-				margin: 0;
-				background-color: #262626;
-				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-				margin-bottom: 20px;
-			}
-
-			.topbar p {
-				text-align: center;
-				font-family: Inconsolata;
-				font-weight: 400;
-				font-size: 20px;
-				user-select: none;
-				color: white;
-			}
-
-			.topbar a {
-				font-size: 15px;
-				text-decoration: none;
-				color: white;
-			}
-
-			.topbar a:hover {
-				text-decoration: underline;
-			}
-
-			.content-container {
-				display: block;
-				margin: auto;
-				width: 50%;
-				word-wrap: break-word;
-				background-color: #262626;
-				box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-				overflow-x: hidden;
-				overflow-y: auto;
-				margin-bottom: 20px;
-			}
-
-			.content-container input[type='text'] {
-				width: 100%;
-				outline: none;
-				background-color: #262626;
-				border: none;
-				font-family: Inconsolata;
-				font-weight: 300;
-				font-size: 15px;
-				color: white;
-				padding: 5px 10px;
-			}
-
-			.content-container a {
-				display: block;
-				background-color: transparent;
-				padding: 5px 10px;
-				margin: 0;
-				font-family: Inconsolata;
-				font-weight: 300;
-				font-size: 15px;
-				user-select: none;
-				text-decoration: none;
-				text-align: center;
-				color: white;
-			}
-
-			.content-container a:hover {
-				text-decoration: underline;
-				background-color: #212121;
-			}
-
-			.content-container a:active {
-				background-color: #1a1a1a;
-			}
-
-			footer p {
-				text-align: center;
-				font-family: Inconsolata;
-				font-weight: 300;
-				font-size: 15px;
-				color: #c9c9c9;
-				user-select: none;
-			}
-
-			@media screen and (max-width: 768px) {
-				.content-container {
-					width: 85%;
-				}
-
-				.content-container a {
-					font-size: 12px;
-				}
-			}
-		</style>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" type="image/png" href="HUBCHICKEN.png">
+		<meta property="og:site_name" content="Hubchicken" />
+		<meta property="og:title" content="Random Videos" />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://hubchicken.tk" />
+		<meta property="og:image" content="https://hubchicken.tk/HUBCHICKEN.png" />
+		<meta property="og:description" content="Everytime you click the button, a new video appears!" />
+		<meta name="theme-color" content="#0D69AB">
+		<title>Random Videos</title>
+		<link rel="stylesheet" href="https://hubchicken.tk/style.css">
 	</head>
 
 	<body>
 		<div class="topbar">
-			<p>404 Image List<br /><a href="https://hubchicken.tk/">Go Back</a></p>
-            
+			<img id="hubchickenicon"
+				style="cursor: pointer;" src="https://hubchicken.tk/HUBCHICKEN.png" alt="Hubchicken"
+				height="35" />
+			<article>
+				<p>Hubchicken.tk<br><span><em>Welcome to hell.</em></span></p>
+			</article>
 		</div>
+
 		<div class="content-container">
-			<input
-				type="text"
-				placeholder="Search an image.."
-				id="search-text"
-			/>
+			<a style="text-align: center;" id="video-link" download></a>
+			<video id="video" controls = true disablePictureInPicture controlsList = "noplaybackrate nodownload nofullscreen">
+				<source id="video-source" src="">
+			</video>
+			<input type="button" value="Click this to load a random video"
+				id="video-button">
+			<p><input type="checkbox" id="automode"> Automatic Mode <b id="comment"> / this will play a new video once the video finishes</b></p>
 		</div>
-        
-		<div
-			class="content-container"
-			style="height: calc(88vh - 50px)"
-			id="container"
-		></div>
+
+		<div class="content-container">
+			<p>Links:</p>
+			<hr>
+			<a href="contact">Contacts</a>
+			<a href="https://videos.hubchicken.tk/">List of Videos</a>
+			<a href="request">Request a Video</a>
+			</h1>
+		</div>
+		<script>
+			const d = new Date();
+			var month = d.getMonth();
+			if (month == 11) {
+			document.getElementById("hubchickenicon").src="assets/HUBCHICKEN_festive.png"
+			}
+		</script>
 		<script type="module">
-			const imagelist = [];
-			const extensions = {"gif": true, "png": true, "jpg": true, "jpeg": true};
-			(await (await fetch(`https://api.github.com/repos/Exruw/hubcdn/git/trees/${(await (await fetch("https://api.github.com/repos/Exruw/hubcdn/commits")).json())[0]?.commit?.tree?.sha}`)).json()).tree.forEach(v => {
- 			   if (v?.type !== "tree" && v?.path && extensions[v.path.split(".").pop()])
- 			       imagelist.push(`https://cdn.hubchicken.tk/${encodeURIComponent(v.path)}`);
-			});
-			export function getArray()
-			{
-			    return imagelist
-			}
-			var images = getArray(), imageElements = [];
+			
+			import { getArray, getRandomVideo } from "https://hubchicken.tk/video-array.js"
+			/*
+				MASSIVE PROBLEM:
+				- Videos do not work on mobile
+				- I do not know why
+				- If anyone can research this, please fix
+				
+				Solution: Mobile sucks dick lmao
+				NOTE: IF YOU WANT TO ADD VIDEOS, GO TO video-array.js
+			*/
 
-			var container = document.getElementById('container');
-			var searchText = document.getElementById('search-text');
-			searchText.placeholder = `Search for an image out of ${images.length} images...`;
-
-			function insertLink(text, link) {
-				link = link.replace('https://cdn.hubchicken.tk/', '')
-				var newElement = document.createElement('a')
-				newElement.href = `${link}`
-				newElement.innerText = text
-				container.append(newElement)
-				imageElements.push(newElement)
-			}
-
+			var video = document.getElementById("video");
+			var videoSource = document.getElementById("video-source");
+			var videoButton = document.getElementById("video-button");
+			var videoLink = document.getElementById("video-link");
+			var automode = document.getElementById("automode")
+			var automodebool = automode.checked
+			console.log(automodebool)
+			let randomItem = null;
 			function formatText(text) {
-				let formatted = text.split('https://cdn.hubchicken.tk/')
+				let formatted = text.split("https://videos.hubchicken.tk/");
 				if (formatted[1])
 					// fuk u if you have a file extension twice
-					return formatted[1]
-						.replace('.png', '')
-						.replace('.jpg', '')
-						.replace('.gif', '')
-						.replace('.jpeg', '')
-						.replaceAll('_', ' ')
-						.replaceAll('-', ' ')
-				//
-				else return text
+					return formatted[1].replace(".mp4", "").replace(".webm", "").replace(".mov", "").replace(".3gpp", "").replaceAll("_", " ").replaceAll("-", " "); 
+				else
+					return text;
+			}
+			function loadVideo() {
+				videoSource.src = randomItem;
+				videoSource.type = "video/ogg";
+				video.autoplay = true;
+				video.load();
+			}
+			function addVideo() {
+				randomItem = getRandomVideo();
+				videoLink.textContent = formatText(randomItem);
+				videoLink.href = randomItem;
+				loadVideo();
+			}
+			function automodehandler(){
+				if (automodebool == true){
+					addVideo()
+				}
+				else{
+					loadVideo()
+				}
+			}
+			function changeboolAM(){
+				automodebool = automode.checked
+				console.log(automodebool)
+			}
+			automode.addEventListener("click",changeboolAM)
+			video.addEventListener("ended", automodehandler, false);
+			videoButton.addEventListener("click", addVideo);
+			video.onpause = video.play
+			/** @type {<Type>(arr: Type[]) => Type} */
+			const random = arr => arr[Math.floor(Math.random() * arr.length)]
+			
+			function particles({
+				amount = 50,
+				delay = 10,
+				duration = 1000,
+				photos = [
+					'moller',
+					'molly_hq',
+					'seconds before bragle',
+					'she wants your food',
+					'sitting on top of headrest',
+					'zzz',
+					'cool sleep',
+					'molge',
+					'begging',
+					'standing'
+				].map((a) => `./molly/${a}.png`),
+				pos: [x, y] = ['0%', '100%']
+			}) {
+				for (const i of Array(amount).keys()) {
+					const img = new Image(150, 150)
+					img.src = random(photos)
+					img.style = `
+					position: fixed;
+					transform-origin: center center;
+					object-fit: contain;
+					`
+					img.ariaHidden = 'true'
+					document.body.appendChild(img)
+					img.animate([{ opacity: 0 }, { opacity: 1 }], {
+						delay: i * delay,
+						duration: 100,
+						fill: 'both'
+					})
+					img
+						.animate(
+							[
+								{
+									top: Math.random() * 100 + '%',
+									left: Math.random() * 100 + '%'
+								},
+								{ top: y, left: x, width: 0, height: 0 }
+							],
+							{
+								delay: i * delay,
+								easing: 'cubic-bezier(.95, .05, .795, .035)',
+								duration: duration,
+								fill: 'both'
+							}
+						)
+						.addEventListener('finish', () => {
+							img.remove()
+						})
+				}
 			}
 
-			images.sort()
-			images.forEach((image) => {
-				insertLink(formatText(image), image)
-			})
 
-			// Searching
-
-			function searchItems(search) {
-				imageElements.forEach((image) => {
-					if (
-						//Kept this if anyone wants to revert it, for whatever reason
-						//---------------------------------------------------------------
-						//formatText(video.innerText)
-						//	.substring(0, search.length)
-						//	.toLowerCase() == search.toLowerCase()
-						image.innerText.includes(search)
-					) {
-						image.style.display = 'block'
-					} else {
-						image.style.display = 'none'
+			/** @param {string} text @param {HTMLElement} [paragraph] */
+			function say(text, paragraph) {
+				const voice = random(speechSynthesis.getVoices().filter(voice => voice.lang.startsWith('en-')))
+				let handle
+				return new Promise((resolve) => {
+					function check() {
+						if (speechSynthesis.speaking) {
+							handle = requestAnimationFrame(check)
+						} else {
+							cancelAnimationFrame(handle)
+							resolve()
+						}
 					}
+					const utter = new SpeechSynthesisUtterance(text)
+					utter.voice = voice
+					if (paragraph) {
+						paragraph.innerText = ""
+					}
+					utter.addEventListener('boundary', function (event) {
+						if (paragraph) {
+							paragraph.innerText = text.substring(0, event.charIndex + event.charLength)
+						}
+					});
+					speechSynthesis.speak(utter)
+					check()
 				})
 			}
 
-			searchText.onkeyup = function () {
-				searchItems(searchText.value)
+			const moller = [
+				'moller',
+				'molly_hq',
+				'seconds before bragle',
+				'she wants your food',
+				'sitting on top of headrest',
+				'zzz',
+				'cool sleep',
+				'molge',
+				'begging',
+				'standing'
+			].map((a) => `./molly/${a}.png`)
+			// Hide context menu
+			document.body.addEventListener('contextmenu', event => {
+				event.preventDefault()
+				if (event.target?.id !== 'video-link') {
+					new Audio('https://www.myinstants.com/media/sounds/vine-boom.mp3').play()
+
+					particles({
+						pos: [event.pageX + 'px', event.pageY + 'px'],
+						duration: 300,
+						delay: 1
+					})
+				} else {
+					navigator.clipboard.writeText(videoLink.href)
+                    say("Copied to clipboard.")
+				}
+			})
+			// Random audios when clicking the hubchicken, the audios are stored on hubcdn if u wanna add some
+			const audiolist = [];
+			const extensions = {"mp3": true, "ogg": true};
+			(await (await fetch(`https://api.github.com/repos/Exruw/hubcdn/git/trees/${(await (await fetch("https://api.github.com/repos/Exruw/hubcdn/commits")).json())[0]?.commit?.tree?.sha}`)).json()).tree.forEach(v => {
+ 			   if (v?.type !== "tree" && v?.path && extensions[v.path.split(".").pop()])
+ 			       audiolist.push(`https://cdn.hubchicken.tk/${encodeURIComponent(v.path)}`);
+			});
+            
+			function getRandomAudio() {
+				const randomIndex = Math.floor(Math.random() * audiolist.length);
+				return audiolist[randomIndex];
 			}
+
+			document.getElementById("hubchickenicon").addEventListener("click", () => {
+				const audioUrl = getRandomAudio();
+				const audio = new Audio(audioUrl);
+				audio.play();
+			});
 		</script>
 	</body>
 </html>
