@@ -2,7 +2,7 @@
 # routing internally.
 [[redirects]]
   from = "/*"
-  to = "/404.html"
+  to = "https/hubchicken.tk/404.html"
   status = 404
 
 [[headers]]
