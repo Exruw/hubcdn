@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html>
-	<!--yeah messy code... SHUT. UP.-->
 	<!--spacy was here-->
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" type="image/svg+xml" href="icon.svg" />
+		<link rel="icon" type="image/png" href="HUBCHICKEN.png">
 		<title>404: Not Found</title>
 		<meta name="theme-color" content="#0D69AB" />
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -13,6 +12,20 @@
 			body {
 			margin: 0;
 			background-color: #1e1e1e;
+			padding: 0;
+			overflow: hidden;
+			}
+			.hubchicken {
+			position: absolute;
+			top: -100px;
+			left: 0;
+			width: 100px;
+			height: 100px;
+			background-image: url('https://hubchicken.tk/HUBCHICKEN.png');
+			background-size: contain;
+			opacity: 0.4;
+			transition: top 10s linear, left 10s linear;
+			z-index: -1;
 			}
 			img {
 			display: block;
@@ -50,17 +63,69 @@
 	<body>
 		<div class="topbar">
 			<p>
-			Page Not Found<br /><a href="https://hubchicken.tk/">Go Back</a>
+				Page Not Found<br /><a href="https://hubchicken.tk/">Go Back</a>
 			</p>
 		</div>
 	</body>
-	<div id="banner-images"></div>		
-        <script type="module">
-			const images = [];
-			const extensions = {"gif": true, "png": true, "jpg": true, "jpeg": true};
-			(await (await fetch(`https://api.github.com/repos/Exruw/hubcdn/git/trees/${(await (await fetch("https://api.github.com/repos/Exruw/hubcdn/commits")).json())[0]?.commit?.tree?.sha}`)).json()).tree.forEach(v => {
- 			   if (v?.type !== "tree" && v?.path && extensions[v.path.split(".").pop()])
- 			       images.push(`https://cdn.hubchicken.tk/${encodeURIComponent(v.path)}`);
-			});
-		$('<img class="fade-in" src="' + images[Math.floor(Math.random() * images.length)] + '">').appendTo('#banner-images');
-		</script>
+	<div id="banner-images"></div>
+	<script type="module">
+		function spawnHubchicken() {
+		  const container = document.querySelector('body');
+		  const width = window.innerWidth;
+		  const height = window.innerHeight;
+		  const hubchicken = document.createElement('div');
+		  hubchicken.classList.add('hubchicken');
+		  const randomX = Math.random() * (width - 100);
+		  const randomY = -Math.random() * height;
+		  hubchicken.style.left = `${randomX}px`;
+		  hubchicken.style.top = `${randomY}px`;
+		  const angle = Math.atan2(randomY, randomX);
+		  const degrees = angle * 180 / Math.PI;
+		  hubchicken.style.transform = `rotate(${degrees}deg)`;
+		  container.appendChild(hubchicken);
+		
+		  const randomDuration = Math.random() * 1000 + 500;
+		  const randomXOffset = Math.random() * 100 - 50;
+		  setTimeout(() => {
+		    hubchicken.style.top = `${height + 100}px`;
+		    hubchicken.style.left = `${randomX + randomXOffset}px`;
+		  }, randomDuration);
+		
+		  const removeInterval = setInterval(() => {
+		    const rect = hubchicken.getBoundingClientRect();
+		    if (rect.top >= height) {
+		      hubchicken.remove();
+		      clearInterval(removeInterval);
+		    }
+		  }, 100);
+		}
+		
+		function spawnHubchickens(numHubchickens) {
+		  let hubchickensSpawned = 0;
+		  const maxHubchickens = 20;
+		  const spawnInterval = setInterval(() => {
+		    if (hubchickensSpawned >= numHubchickens) {
+		      clearInterval(spawnInterval);
+		      return;
+		    }
+		    spawnHubchicken();
+		    hubchickensSpawned++;
+		    if (hubchickensSpawned >= maxHubchickens) {
+		      clearInterval(spawnInterval);
+		      setTimeout(() => {
+		        spawnHubchickens(numHubchickens - maxHubchickens);
+		      }, 3000);
+		    }
+		  }, 50);
+		}
+		
+		window.onload = spawnHubchickens;
+        
+		const images = [];
+		const extensions = {"gif": true, "png": true, "jpg": true, "jpeg": true};
+		(await (await fetch(`https://api.github.com/repos/Exruw/hubcdn/git/trees/${(await (await fetch("https://api.github.com/repos/Exruw/hubcdn/commits")).json())[0]?.commit?.tree?.sha}`)).json()).tree.forEach(v => {
+			if (v?.type !== "tree" && v?.path && extensions[v.path.split(".").pop()])
+			images.push(`https://cdn.hubchicken.tk/${encodeURIComponent(v.path)}`);
+		});
+	$('<img class="fade-in" src="' + images[Math.floor(Math.random() * images.length)] + '">').appendTo('#banner-images');		
+	</script>
